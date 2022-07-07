@@ -1,7 +1,7 @@
 let flock;
 
 function setup() {
-  createCanvas(640, 360);
+  createCanvas(1000, 600);
   createP("Drag the mouse to generate new boids.");
 
   flock = new Flock();
@@ -117,16 +117,15 @@ Boid.prototype.seek = function(target) {
 Boid.prototype.render = function() {
   // Draw a triangle rotated in the direction of velocity
   let theta = this.velocity.heading() + radians(90);
-  fill(127);
-  stroke(200);
   push();
   translate(this.position.x, this.position.y);
   rotate(theta);
-  beginShape();
-  vertex(0, -this.r * 2);
-  vertex(-this.r, this.r * 2);
-  vertex(this.r, this.r * 2);
-  endShape(CLOSE);
+  noStroke();
+  fill("#C3860D");
+  ellipse(0, 0, this.r * 2, this.r * 6);
+  triangle(0, this.r * 2, this.r * 1.5, this.r * 4, this.r * -1.5, this.r * 4);
+  fill(0);
+  circle(0, this.r * -2, 3);
   pop();
 }
 
@@ -141,7 +140,7 @@ Boid.prototype.borders = function() {
 // Separation
 // Method checks for nearby boids and steers away
 Boid.prototype.separate = function(boids) {
-  let desiredseparation = 25.0;
+  let desiredseparation = 15.0;
   let steer = createVector(0, 0);
   let count = 0;
   // For every boid in the system, check if it's too close
@@ -176,7 +175,7 @@ Boid.prototype.separate = function(boids) {
 // Alignment
 // For every nearby boid in the system, calculate the average velocity
 Boid.prototype.align = function(boids) {
-  let neighbordist = 50;
+  let neighbordist = 100;
   let sum = createVector(0,0);
   let count = 0;
   for (let i = 0; i < boids.length; i++) {
@@ -224,13 +223,13 @@ Boid.prototype.avoid = function(boids) {
   if (this.position.x <= 0) {
     steer.add(createVector(1, 0));
   }
-  if (this.position.x > 640) { // width of canvas
+  if (this.position.x > width) { // width of canvas
     steer.add(createVector(-1, 0));
   }
   if (this.position.y <= 0) {
     steer.add(createVector(0, 1));
   }
-  if (this.position.y > 360) { // height of canvas
+  if (this.position.y > height) { // height of canvas
     steer.add(createVector(0, -1));
   }
   return steer;
